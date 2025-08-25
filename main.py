@@ -5,6 +5,10 @@ import asyncio
 import multiprocessing, asyncio
 import aiohttp
 from flask import Flask
+from db import init_db, add_user, get_all_users
+
+# Initialize database tables
+init_db()
 
 # Flask app for Render (dummy endpoint)
 app = Flask(__name__)
@@ -88,7 +92,11 @@ async def start_cmd(event):
         [Button.inline("📱 View Portfolio", b"view_portfolio")]
     ]
     
-    await event.respond(welcome_text, buttons=buttons, parse_mode="markdown")
+    await event.respond(welcome_text, buttons=buttons, parse_mode="html")
+
+    #Save user id (persistent in Postgre)
+    uid = event.sender_id
+    await asyncio.to_thread(add_user, uid)
 
 @client.on(events.NewMessage(pattern='^/help$'))
 async def help_cmd(event):
@@ -110,7 +118,7 @@ async def help_cmd(event):
         "📞 **Need immediate help?** Join: " + SUPPORT_GROUP
     )
     
-    await event.respond(help_text, parse_mode="markdown")
+    await event.respond(help_text, parse_mode="html")
 
 @client.on(events.CallbackQuery)
 async def callback_handler(event):
@@ -131,7 +139,7 @@ async def callback_handler(event):
             "• Any specific requirements\n\n"
             "📝 **Just type your message and I'll forward it to the developer!**"
         )
-        await event.edit(inquiry_text, parse_mode="markdown")
+        await event.edit(inquiry_text, parse_mode="html")
     
     elif data == "view_pricing":
         pricing_text = (
@@ -161,7 +169,7 @@ async def callback_handler(event):
             [Button.inline("🔙 Back to Main", b"back_main")]
         ]
         
-        await event.edit(pricing_text, buttons=buttons, parse_mode="markdown")
+        await event.edit(pricing_text, buttons=buttons, parse_mode="html")
     
     elif data == "join_group":
         group_text = (
@@ -181,7 +189,7 @@ async def callback_handler(event):
             [Button.inline("🔙 Back to Main", b"back_main")]
         ]
         
-        await event.edit(group_text, buttons=buttons, parse_mode="markdown")
+        await event.edit(group_text, buttons=buttons, parse_mode="html")
     
     elif data == "view_portfolio":
         portfolio_text = (
@@ -209,11 +217,33 @@ async def callback_handler(event):
             [Button.inline("🔙 Back to Main", b"back_main")]
         ]
         
-        await event.edit(portfolio_text, buttons=buttons, parse_mode="markdown")
+        await event.edit(portfolio_text, buttons=buttons, parse_mode="html")
     
     elif data == "back_main":
-        # Resend the start message
-        await start_cmd(event)
+        await event.edit(
+            "👋 **Welcome to Bot Development Services!**\n\n"
+            "🤖 **I help you create custom Telegram bots like:**\n"
+            "• Game Bots (Spy x Civilians, Quiz, etc.)\n"
+            "• Business Bots (Shop, Support, etc.)\n"
+            "• Utility Bots (File converter, Weather, etc.)\n"
+            "• Custom Features & Modifications\n\n"
+            "💡 **Services Available:**\n"
+            "• Custom Bot Development\n"
+            "• Bot Modifications & Updates\n"
+            "• 24/7 Hosting Setup (Render + UptimeRobot)\n"
+            "• Database Integration (PostgreSQL)\n"
+            "• Bot Maintenance & Support\n\n"
+            "💰 **Pricing:** Affordable & Negotiable\n"
+            "⚡ **Delivery:** Fast & Quality work\n\n"
+            "Choose an option below to get started:",
+            buttons=[
+                [Button.inline("💬 Send Inquiry", b"send_inquiry")],
+                [Button.inline("💰 View Pricing", b"view_pricing")],
+                [Button.inline("🔗 Join Support Group", b"join_group")],
+                [Button.inline("📱 View Portfolio", b"view_portfolio")]
+            ],
+            parse_mode="html"
+        )
 
 # Handle user inquiries
 @client.on(events.NewMessage)
@@ -233,17 +263,17 @@ async def handle_messages(event):
         
         # Forward inquiry to owner
         inquiry_message = (
-            f"📨 **New Bot Inquiry!**\n\n"
-            f"👤 **From:** {mention_user(user)}\n"
-            f"🆔 **User ID:** `{user_id}`\n"
-            f"👤 **Username:** @{user.username if user.username else 'No username'}\n"
-            f"📅 **Date:** {event.date.strftime('%Y-%m-%d %H:%M:%S')}\n\n"
-            f"💬 **Message:**\n{event.raw_text}\n\n"
-            f"📞 **Reply with:** `/reply {user_id} Your message here`"
+            f"📨 <b>New Bot Inquiry!</b>\n\n"
+            f"👤 <b>From:</b> {mention_user(user)}\n"
+            f"🆔 <b>User ID:</b> <code>{user_id}</code>\n"
+            f"👤 <b>Username:</b> @{user.username if user.username else 'No username'}\n"
+            f"📅 <b>Date:</b> {event.date.strftime('%Y-%m-%d %H:%M:%S')}\n\n"
+            f"💬 <b>Message:</b>\n{event.raw_text}\n\n"
+            f"📞 <b>Reply with:</b> <code>/reply {user_id} Your message here</code>"
         )
         
         try:
-            await client.send_message(OWNER_ID, inquiry_message, parse_mode="markdown")
+            await client.send_message(OWNER_ID, inquiry_message, parse_mode="html")
             
             # Confirm to user
             await event.respond(
@@ -251,7 +281,7 @@ async def handle_messages(event):
                 "📬 Your message has been forwarded to the developer.\n"
                 "⏰ You'll get a response within 24 hours.\n\n"
                 f"💬 Or join {SUPPORT_GROUP} for immediate assistance!",
-                parse_mode="markdown"
+                parse_mode="html"
             )
             
             # Reset user state
@@ -280,20 +310,38 @@ async def reply_to_user(event):
             f"📞 **Need clarification?** Just reply here!"
         )
         
-        await client.send_message(user_id, reply_message, parse_mode="markdown")
+        await client.send_message(user_id, reply_message, parse_mode="html")
         await event.respond(f"✅ Reply sent to user {user_id}")
         
     except Exception as e:
         await event.respond(f"❌ Error sending reply: {str(e)}")
 
 # Owner broadcast system
-@client.on(events.NewMessage(pattern=r'^/broadcast (.+)'))
+@client.on(events.NewMessage(pattern='^/broadcast'))
 async def broadcast_message(event):
     if event.sender_id != OWNER_ID:
         return
-    
-    # This is a simple version - you can add database to store all users
-    await event.respond("🔄 Broadcast feature available in full version with database!")
+
+    args = event.raw_text.split(" ", 1)
+    if len(args) < 2 or not args[1].strip():
+        await event.respond("⚠️ Usage: /broadcast <message>")
+        return
+
+    msg = args[1].strip()
+    sent = 0
+    failed = 0
+
+    user_ids = await asyncio.to_thread(get_all_users)
+    for uid in user_ids:
+        try:
+            await client.send_message(uid, msg, parse_mode="html")
+            sent += 1
+            await asyncio.sleep(0.1)  # small delay, avoid flood
+        except:
+            failed += 1
+
+    await event.respond(f"✅ Broadcast complete!\n📨 Sent: {sent}\n❌ Failed: {failed}")
+
 
 @client.on(events.NewMessage(pattern='^/stats$'))
 async def stats_cmd(event):
@@ -311,7 +359,7 @@ async def stats_cmd(event):
         f"`/stats` - Show statistics"
     )
     
-    await event.respond(stats_text, parse_mode="markdown")
+    await event.respond(stats_text, parse_mode="html")
 
 if __name__ == "__main__":
     # Run Flask in separate process
