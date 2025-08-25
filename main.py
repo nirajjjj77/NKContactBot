@@ -13,10 +13,6 @@ app = Flask(__name__)
 def home():
     return "Contact Bot is running! 🤖"
 
-@app.route('/health')
-def health():
-    return "OK"
-
 def run_web():
     # Run flask on separate process (not thread, avoids asyncio loop conflicts)
     app.run(host="0.0.0.0", port=10000)
