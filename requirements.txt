@@ -1,3 +1,4 @@
 telethon==1.28.5
 flask==2.3.3
 asyncio
+aiohttp==3.8.5

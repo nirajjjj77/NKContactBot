@@ -2,6 +2,8 @@ from telethon import TelegramClient, events, Button
 import os
 import threading
 import asyncio
+import multiprocessing, asyncio
+import aiohttp
 from flask import Flask
 
 # Flask app for Render (dummy endpoint)
@@ -16,10 +18,19 @@ def health():
     return "OK"
 
 def run_web():
+    # Run flask on separate process (not thread, avoids asyncio loop conflicts)
     app.run(host="0.0.0.0", port=10000)
 
-# Start flask server in background
-threading.Thread(target=run_web, daemon=True).start()
+async def keep_alive():
+    """Periodically ping the Render URL to prevent sleeping"""
+    while True:
+        try:
+            async with aiohttp.ClientSession() as session:
+                await session.get("https://nkcontactbot.onrender.com")  # Yaha apna URL daalना
+                print("🌍 Keep-alive ping sent!")
+        except Exception as e:
+            print(f"⚠️ Keep-alive failed: {e}")
+        await asyncio.sleep(300)  # every 5 minutes
 
 # Bot configuration
 API_ID = int(os.environ.get("API_ID", 0))
@@ -306,5 +317,11 @@ async def stats_cmd(event):
     
     await event.respond(stats_text, parse_mode="markdown")
 
-print("🤖 Contact Bot is running...")
-client.run_until_disconnected()
+if __name__ == "__main__":
+    # Run Flask in separate process
+    multiprocessing.Process(target=run_web, daemon=True).start()
+    # Start keep-alive inside Telethon loop
+    client.loop.create_task(keep_alive())
+    # Run bot (manages its own event loop)
+    print("🤖 Contact Bot is running...")
+    client.run_until_disconnected()
