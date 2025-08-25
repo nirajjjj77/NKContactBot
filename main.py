@@ -68,20 +68,20 @@ async def start_cmd(event):
         return
         
     welcome_text = (
-        "👋 **Welcome to Bot Development Services!**\n\n"
-        "🤖 **I help you create custom Telegram bots like:**\n"
+        "👋 <b>Welcome to Bot Development Services!</b>\n\n"
+        "🤖 <b>I help you create custom Telegram bots like:</b>\n"
         "• Game Bots (Spy x Civilians, Quiz, etc.)\n"
         "• Business Bots (Shop, Support, etc.)\n"
         "• Utility Bots (File converter, Weather, etc.)\n"
         "• Custom Features & Modifications\n\n"
-        "💡 **Services Available:**\n"
+        "💡 <b>Services Available:</b>\n"
         "• Custom Bot Development\n"
         "• Bot Modifications & Updates\n"
         "• 24/7 Hosting Setup (Render + UptimeRobot)\n"
         "• Database Integration (PostgreSQL)\n"
         "• Bot Maintenance & Support\n\n"
-        "💰 **Pricing:** Affordable & Negotiable\n"
-        "⚡ **Delivery:** Fast & Quality work\n\n"
+        "💰 <b>Pricing:</b> Affordable & Negotiable\n"
+        "⚡ <b>Delivery:</b> Fast & Quality work\n\n"
         "Choose an option below to get started:"
     )
     
@@ -104,18 +104,18 @@ async def help_cmd(event):
         return
         
     help_text = (
-        "📖 **How to use this bot:**\n\n"
-        "1️⃣ Send `/start` to see main menu\n"
+        "📖 <b>How to use this bot:*</b>\n\n"
+        "1️⃣ Send <code>/start</code> to see main menu\n"
         "2️⃣ Click 'Send Inquiry' to describe your requirements\n"
         "3️⃣ I'll get back to you within 24 hours\n"
         "4️⃣ We discuss details and pricing\n"
         "5️⃣ Development starts after agreement\n\n"
-        "🔄 **Process:**\n"
+        "🔄 <b>Process:</b>\n"
         "• Requirement Analysis\n"
         "• Development & Testing\n"
         "• Deployment & Setup\n"
         "• Support & Maintenance\n\n"
-        "📞 **Need immediate help?** Join: " + SUPPORT_GROUP
+        "📞 <b>Need immediate help?</b> Join: " + SUPPORT_GROUP
     )
     
     await event.respond(help_text, parse_mode="html")
@@ -130,38 +130,38 @@ async def callback_handler(event):
     if data == "send_inquiry":
         user_states[event.sender_id] = "waiting_inquiry"
         inquiry_text = (
-            "✍️ **Please describe your bot requirements:**\n\n"
+            "✍️ <b>Please describe your bot requirements:</b>\n\n"
             "Include details like:\n"
             "• What type of bot you want\n"
             "• Key features needed\n"
             "• Your budget range\n"
             "• Timeline expectations\n"
             "• Any specific requirements\n\n"
-            "📝 **Just type your message and I'll forward it to the developer!**"
+            "📝 <b>Just type your message and I'll forward it to the developer!</b>"
         )
         await event.edit(inquiry_text, parse_mode="html")
     
     elif data == "view_pricing":
         pricing_text = (
-            "💰 **Service Pricing Guide:**\n\n"
-            "🤖 **Simple Bots:** $10-30\n"
+            "💰 <b>Service Pricing Guide:</b>\n\n"
+            "🤖 <b>Simple Bots:*</b>$10-30\n"
             "• Basic commands\n"
             "• Simple responses\n"
             "• No database needed\n\n"
-            "🎮 **Game Bots:** $30-80\n"
+            "🎮 <b>Game Bots:</b> $30-80\n"
             "• Interactive games\n"
             "• Multi-user support\n"
             "• Score tracking\n\n"
-            "🏪 **Business Bots:** $50-150\n"
+            "🏪 <b>Business Bots:</b> $50-150\n"
             "• E-commerce features\n"
             "• Payment integration\n"
             "• Admin panels\n\n"
-            "🔧 **Custom Features:** $20-100\n"
+            "🔧 <b>Custom Features:</b> $20-100\n"
             "• Database integration\n"
             "• API connections\n"
             "• Advanced functionality\n\n"
-            "📦 **Complete Package:** Bot + Hosting + Support\n\n"
-            "💡 **Final price depends on complexity!**"
+            "📦 <b>Complete Package:</b> Bot + Hosting + Support\n\n"
+            "💡 <b>Final price depends on complexity!</b>"
         )
         
         buttons = [
@@ -173,15 +173,15 @@ async def callback_handler(event):
     
     elif data == "join_group":
         group_text = (
-            "👥 **Join our Support Community:**\n\n"
-            f"🔗 **Support Group:** {SUPPORT_GROUP}\n\n"
-            "**What you get:**\n"
+            "👥 <b>Join our Support Community:</b>\n\n"
+            f"🔗 <b>Support Group:</b> {SUPPORT_GROUP}\n\n"
+            "<b>What you get:</b>\n"
             "• Free bot development tips\n"
             "• Community support\n"
             "• Updates on new services\n"
             "• Direct communication\n"
             "• Showcase of completed projects\n\n"
-            "**Join now for instant support!**"
+            "<b>Join now for instant support!</b>"
         )
         
         buttons = [
@@ -193,23 +193,23 @@ async def callback_handler(event):
     
     elif data == "view_portfolio":
         portfolio_text = (
-            "🏆 **Previous Work & Portfolio:**\n\n"
-            "🎮 **Spy x Civilians Bot**\n"
+            "🏆 <b>Previous Work & Portfolio:</b>\n\n"
+            "🎮 <b>Spy x Civilians Bot</b>\n"
             "• Multiplayer game bot\n"
             "• 4 different game modes\n"
             "• Database integration\n"
             "• Anti-spam system\n"
             "• Admin controls\n\n"
-            "🔧 **Technical Skills:**\n"
+            "🔧 <b>Technical Skills:</b>\n"
             "• Python (Telethon, Pyrogram)\n"
             "• Database (PostgreSQL, MongoDB)\n"
             "• Hosting (Render, Heroku, VPS)\n"
             "• 24/7 Uptime Setup\n"
             "• Payment Integration\n"
             "• Web Scraping & APIs\n\n"
-            "✅ **100% Client Satisfaction**\n"
-            "✅ **Post-delivery Support**\n"
-            "✅ **Source Code Provided**"
+            "✅ <b>100% Client Satisfaction</b>\n"
+            "✅ <b>Post-delivery Support</b>\n"
+            "✅ <b>Source Code Provided</b>"
         )
         
         buttons = [
@@ -221,20 +221,20 @@ async def callback_handler(event):
     
     elif data == "back_main":
         await event.edit(
-            "👋 **Welcome to Bot Development Services!**\n\n"
-            "🤖 **I help you create custom Telegram bots like:**\n"
+            "👋 <b>Welcome to Bot Development Services!</b>\n\n"
+            "🤖 <b>I help you create custom Telegram bots like:</b>\n"
             "• Game Bots (Spy x Civilians, Quiz, etc.)\n"
             "• Business Bots (Shop, Support, etc.)\n"
             "• Utility Bots (File converter, Weather, etc.)\n"
             "• Custom Features & Modifications\n\n"
-            "💡 **Services Available:**\n"
+            "💡 <b>Services Available:</b>\n"
             "• Custom Bot Development\n"
             "• Bot Modifications & Updates\n"
             "• 24/7 Hosting Setup (Render + UptimeRobot)\n"
             "• Database Integration (PostgreSQL)\n"
             "• Bot Maintenance & Support\n\n"
-            "💰 **Pricing:** Affordable & Negotiable\n"
-            "⚡ **Delivery:** Fast & Quality work\n\n"
+            "💰 <b>Pricing:</b> Affordable & Negotiable\n"
+            "⚡ <b>Delivery:</b> Fast & Quality work\n\n"
             "Choose an option below to get started:",
             buttons=[
                 [Button.inline("💬 Send Inquiry", b"send_inquiry")],
@@ -277,7 +277,7 @@ async def handle_messages(event):
             
             # Confirm to user
             await event.respond(
-                "✅ **Inquiry sent successfully!**\n\n"
+                "✅ <b>Inquiry sent successfully!</b>\n\n"
                 "📬 Your message has been forwarded to the developer.\n"
                 "⏰ You'll get a response within 24 hours.\n\n"
                 f"💬 Or join {SUPPORT_GROUP} for immediate assistance!",
@@ -289,7 +289,7 @@ async def handle_messages(event):
             
         except Exception as e:
             await event.respond(
-                "❌ **Sorry, there was an error sending your message.**\n\n"
+                "❌ <b>Sorry, there was an error sending your message.</b>\n\n"
                 f"Please try joining {SUPPORT_GROUP} directly for support."
             )
 
@@ -304,10 +304,10 @@ async def reply_to_user(event):
         message = event.pattern_match.group(2)
         
         reply_message = (
-            f"👨‍💻 **Developer Reply:**\n\n"
+            f"👨‍💻 <b>Developer Reply:</b>\n\n"
             f"{message}\n\n"
-            f"💬 **Continue discussion:** {SUPPORT_GROUP}\n"
-            f"📞 **Need clarification?** Just reply here!"
+            f"💬 <b>Continue discussion:</b> {SUPPORT_GROUP}\n"
+            f"📞 <b>Need clarification?</b> Just reply here!"
         )
         
         await client.send_message(user_id, reply_message, parse_mode="html")
@@ -349,14 +349,14 @@ async def stats_cmd(event):
         return
     
     stats_text = (
-        f"📊 **Bot Statistics:**\n\n"
-        f"👥 **Active Users:** {len(last_message_time)}\n"
-        f"💬 **Users in Inquiry Mode:** {len([u for u, s in user_states.items() if s == 'waiting_inquiry'])}\n"
-        f"⚡ **Bot Status:** Running\n\n"
-        f"📞 **Commands:**\n"
-        f"`/reply <user_id> <message>` - Reply to user\n"
-        f"`/broadcast <message>` - Broadcast (Pro version)\n"
-        f"`/stats` - Show statistics"
+        f"📊 <b>Bot Statistics:</b>\n\n"
+        f"👥 <b>Active Users:</b> {len(last_message_time)}\n"
+        f"💬 <b>Users in Inquiry Mode:</b> {len([u for u, s in user_states.items() if s == 'waiting_inquiry'])}\n"
+        f"⚡ <b>Bot Status:</b> Running\n\n"
+        f"📞 <b>Commands:</b>\n"
+        f"<code>/reply <user_id> <message></code> - Reply to user\n"
+        f"<code>/broadcast <message></code> - Broadcast (Pro version)\n"
+        f"<code>/stats</code> - Show statistics"
     )
     
     await event.respond(stats_text, parse_mode="html")
