@@ -2,3 +2,4 @@ telethon
 flask
 asyncio
 aiohttp
+psycopg[binary]
