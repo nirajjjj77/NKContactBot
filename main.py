@@ -38,7 +38,9 @@ API_ID = int(os.environ.get("API_ID", 0))
 API_HASH = os.environ.get("API_HASH", "")
 BOT_TOKEN = os.environ.get("BOT_TOKEN", "")
 OWNER_ID = int(os.environ.get("OWNER_ID", 0))  # Your Telegram user ID
-SUPPORT_GROUP = os.environ.get("SUPPORT_GROUP", "@YourSupportGroup")  # Your support group username
+SUPPORT_GROUP = "@" + os.environ.get("SUPPORT_GROUP", "YourSupportGroup")
+UPDATES_CHANNEL ="@" + os.environ.get("UPDATES_CHANNEL", "YourUpdatesChannel")
+
 
 client = TelegramClient('contact_bot', API_ID, API_HASH).start(bot_token=BOT_TOKEN)
 
@@ -68,7 +70,7 @@ def detect_keywords(text):
     text = text.lower()
     
     # Bot request keywords
-    bot_keywords = ['bot', 'clone', 'similar', 'jaisa', 'same', 'chahiye', 'banao', 'bana do']
+    bot_keywords = ['bot', 'clone', 'similar', 'jaisa', 'same', 'chahiye', 'banao', 'bana do', 'message', 'dm']
     
     # My bots keywords
     mybots_keywords = ['bots', 'projects', 'work', 'banaya', 'dekho', 'show', 'projects']
@@ -102,16 +104,7 @@ async def start_cmd(event):
         "• Need help with Telegram bots? Ask away!\n"
         "• Got questions? I'm here to answer!\n"
         "• Want to see what I've built? Check it out!\n\n"
-        "💡 <b>My Current Bots:</b>\n"
-        "• Spy x Civilians Game Bot 🎮\n"
-        "• This Contact Bot 📞\n"
-        "• More coming soon...\n\n"
-        "🎯 <b>Quick Commands:</b>\n"
-        "• Type <code>/mybots</code> to see my projects\n"
-        "• Type <code>/request</code> to ask for help\n"
-        "• Type <code>/support</code> for community group\n"
-        "• Just ask me anything in simple words!\n\n"
-        "💬 <b>I'm here to help, not sell anything!</b> 😊"
+        "📖 <b>Type /help to see all available commands</b>"
     )
     
     await event.respond(welcome_text, parse_mode="html")
@@ -128,10 +121,12 @@ async def help_cmd(event):
     help_text = (
         "📖 <b>How to use this bot:</b>\n\n"
         "🎯 <b>Available Commands:</b>\n"
-        "• <code>/mybots</code> - See what I've built\n"
-        "• <code>/request</code> - Ask for help or bot clone\n" 
-        "• <code>/support</code> - Join our community\n\n"
-        "💬 <b>Or just chat normally:</b>\n"
+        "• <code>/mybots</code> or <code>/bots</code> - See what I've built\n"
+        "• <code>/message</code> or <code>/request</code> - Ask for help or bot clone(Direct Message)\n" 
+        "• <code>/support</code> or <code>/group</code> - Join our community\n"
+        "• <code>/channel</code> - Get updates on my bots\n"
+        "• <code>/help</code> - Show this help message\n\n"
+        "💬 <b>Examples:</b>\n"
         "• 'I want a bot like spy game'\n"
         "• 'Can you help me with...?'\n"
         "• 'Show me your bots'\n"
@@ -141,7 +136,6 @@ async def help_cmd(event):
         "• Share bot clones if possible\n"
         "• Answer your questions\n"
         "• Build community together\n\n"
-        f"📞 <b>Quick support:</b> Join {SUPPORT_GROUP}"
     )
     
     await event.respond(help_text, parse_mode="html")
@@ -159,22 +153,25 @@ async def mybots_cmd(event):
         "• Anti-spam & admin controls\n"
         "• Database integration\n"
         "• Currently active & running!\n\n"
-        "📞 <b>This Contact Bot</b>\n"
-        "• Helps people connect with me\n"
-        "• Query handling system\n"
-        "• Community building tool\n\n"
+        "📞 <b>This Contact Bot</b>(You're using it right now!)\n"
+        "• Lets you connect with me easily\n"
+        "• Handles requests & queries\n"
+        "• Forwards messages to me directly\n"
+        "• Anti-spam + keyword detection\n"
+        "• Support group integration\n"
+        "• Built with database for persistence\n\n"
         "🚀 <b>Future Projects:</b>\n"
         "• More game bots\n"
         "• Utility bots\n"
         "• Community tools\n\n"
         "Want something similar? Just ask!\n"
         "I'll help if I can! 😊\n\n"
-        f"📢 Updates & showcases: {SUPPORT_GROUP}"
+        f"📢 Updates & info about my bots: {UPDATES_CHANNEL}"
     )
     
     await event.respond(mybots_text, parse_mode="html")
 
-@client.on(events.NewMessage(pattern='^/(request|help_me)$'))
+@client.on(events.NewMessage(pattern='^/(message|request|help_me)$'))
 async def request_cmd(event):
     if await is_spam(event.sender_id):
         return
@@ -193,7 +190,7 @@ async def request_cmd(event):
         "• What kind of bot you want\n"
         "• Which features you need\n"
         "• Any specific requirements\n\n"
-        "📝 <b>Just describe your needs and I'll see how I can help!</b>\n\n"
+        "📝 <b>Just describe your needs(Your message will forward to me directly) and I'll see how I can help!</b>\n\n"
         "Note: I help based on availability & interest 😊"
     )
     
@@ -205,23 +202,38 @@ async def support_cmd(event):
         return
         
     group_text = (
-        "👥 <b>Join Our Bot Community!</b>\n\n"
+        "👥 <b>Join Our Support Community!</b>\n\n"
         f"🔗 <b>Support Group:</b> {SUPPORT_GROUP}\n\n"
         "<b>What's in the group:</b>\n"
-        "• Bot showcases & demos\n"
-        "• New project announcements\n"
-        "• Community discussions\n"
-        "• Bot development tips\n"
-        "• Direct interaction with me\n"
-        "• See my bots in action!\n\n"
-        "🎮 <b>Try my Spy Game bot there!</b>\n"
-        "💬 <b>Get quick help & support</b>\n"
-        "📢 <b>Stay updated with new bots</b>\n\n"
-        f"<b>Join here:</b> https://t.me/{SUPPORT_GROUP.replace('@', '')}\n\n"
+        "• Ask your queries\n"
+        "• Request bot clones\n"
+        "• Get technical help\n"
+        "• Discuss features & issues\n"
+        "• Interact directly with me\n\n"
+        "💬 <b>Get quick help & support anytime!</b>\n"
         "🤝 <b>Let's build an awesome bot community together!</b>"
     )
     
     await event.respond(group_text, parse_mode="html")
+
+@client.on(events.NewMessage(pattern='^/channel$'))
+async def channel_cmd(event):
+    if await is_spam(event.sender_id):
+        return
+
+    channel_text = (
+        "📢 <b>Stay updated with my latest bots & projects!</b>\n\n"
+        f"🔗 <b>Updates Channel:</b> {UPDATES_CHANNEL}\n\n"
+        "👀 What's inside?\n"
+        "• New bot launches\n"
+        "• Updates & improvements\n"
+        "• Tips & tutorials\n"
+        "• Community announcements\n\n"
+        "🚀 Join now and never miss an update!"
+    )
+    
+    await event.respond(channel_text, parse_mode="html")
+
 
 # Handle all text messages with keyword detection
 @client.on(events.NewMessage)
@@ -285,7 +297,7 @@ async def handle_messages(event):
             "🎯 <b>What I currently have:</b>\n"
             "• Spy x Civilians Game Bot\n"
             "• This Contact Bot\n\n"
-            "Want something similar? Type <code>/request</code> and describe what you need!\n\n"
+            "Want something similar? Type /message and describe what you need!\n\n"
             "🤝 <b>I'll see how I can help!</b>",
             parse_mode="html"
         )
@@ -296,19 +308,20 @@ async def handle_messages(event):
             "• Spy x Civilians Game Bot (Active)\n"
             "• This Contact Bot (You're using it!)\n\n"
             "More projects coming soon!\n\n"
-            "Type <code>/mybots</code> for detailed info\n"
-            f"Or join {SUPPORT_GROUP} to see them in action!",
+            "Type /mybots for detailed info\n"
+            f"Or check {UPDATES_CHANNEL} for updates, info and new bots!",
             parse_mode="html"
         )
         
     elif keyword_type == 'support':
         await event.respond(
-            "👥 <b>Join our community!</b>\n\n"
-            f"🔗 {SUPPORT_GROUP}\n\n"
+            "👥 <b>Need help?</b>\n\n"
+            f"👥 <b>Join our suppport group:</b> 🔗 {SUPPORT_GROUP}\n\n"
+            "• Ask queries\n"
             "• See my bots in action\n"
-            "• Get help from community\n"
-            "• Stay updated with new projects\n\n"
-            "Type <code>/support</code> for more details!",
+            "• Request clones\n"
+            "• Get help from me & community\n\n"
+            "Type /support for more details!",
             parse_mode="html"
         )
         
@@ -320,7 +333,7 @@ async def handle_messages(event):
             "• What you need help with\n"
             "• Any specific questions\n"
             "• Bot requests or queries\n\n"
-            "📝 Just type your message and I'll get back to you!\n\n"
+            "📝 Just type your message(Your message will forward to me directly) and I'll get back to you!\n\n"
             "🤝 <b>Always happy to help fellow developers!</b>",
             parse_mode="html"
         )
@@ -334,8 +347,9 @@ async def handle_messages(event):
             "• Ask for help: 'I need help with...'\n"
             "• Request bots: 'I want a bot like...'\n"
             "• See my work: 'Show me your bots'\n"
+            "• Get updates: /channel\n"
             "• Join community: 'Support group'\n\n"
-            "💬 <b>Or just ask me anything!</b>\n\n"
+            "💬 <b>Or send me your query!</b> - /message\n\n"
             "🤝 I'm here to help, not to sell anything! 😊",
             parse_mode="html"
         )
