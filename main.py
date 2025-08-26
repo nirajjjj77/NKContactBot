@@ -38,8 +38,8 @@ API_ID = int(os.environ.get("API_ID", 0))
 API_HASH = os.environ.get("API_HASH", "")
 BOT_TOKEN = os.environ.get("BOT_TOKEN", "")
 OWNER_ID = int(os.environ.get("OWNER_ID", 0))  # Your Telegram user ID
-SUPPORT_GROUP = "@" + os.environ.get("SUPPORT_GROUP", "YourSupportGroup")
-UPDATES_CHANNEL ="@" + os.environ.get("UPDATES_CHANNEL", "YourUpdatesChannel")
+SUPPORT_GROUP = os.environ.get("SUPPORT_GROUP", "YourSupportGroup")
+UPDATES_CHANNEL = os.environ.get("UPDATES_CHANNEL", "YourUpdatesChannel")
 
 
 client = TelegramClient('contact_bot', API_ID, API_HASH).start(bot_token=BOT_TOKEN)
