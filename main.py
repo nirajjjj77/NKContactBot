@@ -42,7 +42,7 @@ SUPPORT_GROUP = "@" + os.environ.get("SUPPORT_GROUP", "YourSupportGroup")
 UPDATES_CHANNEL ="@" + os.environ.get("UPDATES_CHANNEL", "YourUpdatesChannel")
 
 
-client = TelegramClient('contact_bot', API_ID, API_HASH).start(bot_token=BOT_TOKEN)
+client = TelegramClient(None, API_ID, API_HASH).start(bot_token=BOT_TOKEN)
 
 # Anti-spam system
 user_states = {}  # user_id -> state
