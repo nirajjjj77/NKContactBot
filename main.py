@@ -190,7 +190,7 @@ async def request_cmd(event):
         "• What kind of bot you want\n"
         "• Which features you need\n"
         "• Any specific requirements\n\n"
-        "📝 <b>Just describe your needs(Your message will forward to me directly) and I'll see how I can help!</b>\n\n"
+        "📝 Just describe your needs <b>(Your message will forward to me directly)</b> and I'll see how I can help!\n\n"
         "Note: I help based on availability & interest 😊"
     )
     
@@ -333,7 +333,7 @@ async def handle_messages(event):
             "• What you need help with\n"
             "• Any specific questions\n"
             "• Bot requests or queries\n\n"
-            "📝 Just type your message(Your message will forward to me directly) and I'll get back to you!\n\n"
+            "📝 Just type your message <b>(Your message will forward to me directly)</b> and I'll get back to you!\n\n"
             "🤝 <b>Always happy to help fellow developers!</b>",
             parse_mode="html"
         )
